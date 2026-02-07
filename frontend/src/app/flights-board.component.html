@@ -1,0 +1,67 @@
+<div class="mt-4">
+  <div class="flex items-center gap-3 mb-4">
+    <label class="text-sm text-gray-600">Status:</label>
+    <select [(ngModel)]="statusFilter" (ngModelChange)="applyFiltersAndSorting()" class="border rounded px-2 py-1">
+      <option value="ALL">Todos</option>
+      <option value="ON_TIME">On Time</option>
+      <option value="DELAYED">Delayed</option>
+      <option value="BOARDING">Boarding</option>
+      <option value="IN_FLIGHT">In Flight</option>
+      <option value="LANDED">Landed</option>
+      <option value="MAINTENANCE_REQUIRED">Maintenance</option>
+    </select>
+  
+    <label class="text-sm text-gray-600">Ordenar por:</label>
+    <select [(ngModel)]="sortKey" (ngModelChange)="applyFiltersAndSorting()" class="border rounded px-2 py-1">
+      <option value="scheduledDeparture">Prevista</option>
+      <option value="estimatedDeparture">Estimada</option>
+      <option value="flightNumber">Voo</option>
+    </select>
+    <button (click)="sortDir = sortDir==='asc' ? 'desc' : 'asc'; applyFiltersAndSorting();" class="px-2 py-1 border rounded">
+      {{ sortDir==='asc' ? 'Asc' : 'Desc' }}
+    </button>
+  </div>
+  
+  <!-- Skeleton Loader -->
+  <div *ngIf="loading" class="animate-pulse space-y-3">
+    <div class="h-5 bg-slate-200 rounded w-1/3"></div>
+    <div class="h-5 bg-slate-200 rounded w-1/2"></div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div class="h-24 bg-slate-200 rounded"></div>
+      <div class="h-24 bg-slate-200 rounded"></div>
+    </div>
+  </div>
+  
+  <!-- Flights Table -->
+  <div *ngIf="!loading">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="text-left text-gray-500">
+          <th class="py-2">Voo</th>
+          <th class="py-2">Origem</th>
+          <th class="py-2">Destino</th>
+          <th class="py-2">Prevista</th>
+          <th class="py-2">Estimada</th>
+          <th class="py-2">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let f of filtered" class="border-t">
+          <td class="py-2 font-medium">{{ f.flightNumber }}</td>
+          <td class="py-2">{{ f.origin }}</td>
+          <td class="py-2">{{ f.destination }}</td>
+          <td class="py-2">{{ f.scheduledDeparture | date:'shortTime' }}</td>
+          <td class="py-2">{{ f.estimatedDeparture | date:'shortTime' }}</td>
+          <td class="py-2">
+            <span [ngClass]="{
+              'px-2 py-1 rounded text-white bg-[#00a550]': f.status==='ON_TIME',
+              'px-2 py-1 rounded text-white bg-[#f9a01b]': f.status==='DELAYED' || f.status==='BOARDING',
+              'px-2 py-1 rounded text-white bg-[#e60000]': f.status==='MAINTENANCE_REQUIRED',
+              'px-2 py-1 rounded text-white bg-slate-600': f.status==='IN_FLIGHT' || f.status==='LANDED'
+            }">{{ f.status }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<div class="mt-4">
+  <div class="flex items-center gap-2 mb-2">
+    <h2 class="text-2xl font-semibold">Operational Alerts</h2>
+    <span class="text-xs text-gray-500">live</span>
+  </div>
+  <!-- Skeleton Loader -->
+  <div *ngIf="loading" class="animate-pulse space-y-2">
+    <div class="h-5 bg-slate-200 rounded w-1/4"></div>
+    <div class="h-5 bg-slate-200 rounded w-2/5"></div>
+  </div>
+
+  <div *ngIf="!loading" class="rounded border border-gray-200 bg-gray-50 p-2">
+    <div class="flex flex-wrap gap-2">
+      <span *ngFor="let a of alerts"
+            class="px-2 py-1 rounded text-white text-sm"
+            [ngClass]="{
+              'bg-slate-600': a.severity === 'INFO',
+              'bg-[#f9a01b]': a.severity === 'WARNING',
+              'bg-[#e60000] animate-pulse': a.severity === 'CRITICAL'
+            }">
+        {{ a.severity }} • {{ a.message }}
+        <ng-container *ngIf="a.relatedFlightId">(Flight: {{ a.relatedFlightId }})</ng-container>
+      </span>
+      <span *ngIf="!alerts.length" class="text-gray-500">No alerts.</span>
+    </div>
+  </div>
+</div>

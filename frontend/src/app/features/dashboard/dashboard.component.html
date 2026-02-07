@@ -1,0 +1,125 @@
+<div class="min-h-screen bg-slate-50 text-slate-900">
+  <header class="px-6 py-4 bg-slate-900 text-white">
+    <h1 class="text-xl font-semibold">Flight Operations Monitoring System</h1>
+    <p class="text-sm opacity-80">Operational dashboard with resilient polling and graceful degradation</p>
+  </header>
+
+  <main class="p-6 grid grid-cols-1 xl:grid-cols-3 gap-6">
+    <!-- Flights Overview -->
+    <section class="xl:col-span-2 bg-white rounded shadow border border-slate-200">
+      <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between">
+        <h2 class="font-semibold">Flights Overview</h2>
+        <span class="text-xs text-slate-500">Reactive stream with retry/backoff</span>
+      </div>
+      <div class="p-4">
+        <ng-container *ngIf="flights$ | async as flightsState">
+          <div *ngIf="flightsState.status === 'loading'" class="text-slate-500">Loading flights…</div>
+          <div *ngIf="flightsState.status === 'error'" class="text-red-600">{{flightsState.error}}</div>
+          <div *ngIf="flightsState.status === 'empty'" class="text-slate-500">No flights available</div>
+          <table *ngIf="flightsState.status === 'success'" class="w-full text-sm">
+            <thead>
+              <tr class="text-left border-b">
+                <th class="py-2">Flight</th>
+                <th class="py-2">Route</th>
+                <th class="py-2">Sched / Est</th>
+                <th class="py-2">Status</th>
+                <th class="py-2">Aircraft</th>
+                <th class="py-2">Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let f of flightsState.data" class="border-b hover:bg-slate-50">
+                <td class="py-2">{{f.flightNumber}}</td>
+                <td class="py-2">{{f.origin}} → {{f.destination}}</td>
+                <td class="py-2">
+                  <div class="text-slate-700">{{f.scheduledDeparture | date:'short'}}</div>
+                  <div class="text-slate-500 text-xs">Est: {{f.estimatedDeparture | date:'short'}}</div>
+                </td>
+                <td class="py-2">
+                  <span [ngClass]="{
+                    'text-green-700': f.status==='ON_TIME' || f.status==='LANDED',
+                    'text-yellow-700': f.status==='BOARDING',
+                    'text-orange-700': f.status==='DELAYED',
+                    'text-blue-700': f.status==='IN_FLIGHT',
+                    'text-red-700': f.status==='MAINTENANCE_REQUIRED'
+                  }">{{f.status}}</span>
+                </td>
+                <td class="py-2">{{f.aircraftId}}</td>
+                <td class="py-2 text-xs text-slate-500">{{f.lastUpdated | date:'short'}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-container>
+      </div>
+    </section>
+
+    <!-- Alerts Panel -->
+    <section class="bg-white rounded shadow border border-slate-200">
+      <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between">
+        <h2 class="font-semibold">Operational Alerts</h2>
+        <span class="text-xs text-slate-500">Severity-based indicators</span>
+      </div>
+      <div class="p-4 space-y-2">
+        <ng-container *ngIf="alerts$ | async as alertsState">
+          <div *ngIf="alertsState.status === 'loading'" class="text-slate-500">Loading alerts…</div>
+          <div *ngIf="alertsState.status === 'error'" class="text-red-600">{{alertsState.error}}</div>
+          <div *ngIf="alertsState.status === 'empty'" class="text-slate-500">No alerts</div>
+          <div *ngIf="alertsState.status === 'success'">
+            <div *ngFor="let a of alertsState.data" class="p-3 rounded border"
+                 [ngClass]="{
+                   'border-slate-300': a.severity==='INFO',
+                   'border-yellow-400': a.severity==='WARNING',
+                   'border-red-500': a.severity==='CRITICAL'
+                 }">
+              <div class="text-xs text-slate-500">{{a.timestamp | date:'short'}}</div>
+              <div class="font-medium" [ngClass]="{
+                'text-slate-800': a.severity==='INFO',
+                'text-yellow-700': a.severity==='WARNING',
+                'text-red-700': a.severity==='CRITICAL'
+              }">{{a.message}}</div>
+              <div class="text-xs text-slate-500" *ngIf="a.relatedFlightId">Flight: {{a.relatedFlightId}}</div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </section>
+
+    <!-- Aircraft Status -->
+    <section class="bg-white rounded shadow border border-slate-200">
+      <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between">
+        <h2 class="font-semibold">Aircraft Status</h2>
+        <span class="text-xs text-slate-500">Operational / Maintenance / Grounded</span>
+      </div>
+      <div class="p-4">
+        <ng-container *ngIf="aircraft$ | async as aircraftState">
+          <div *ngIf="aircraftState.status === 'loading'" class="text-slate-500">Loading aircraft…</div>
+          <div *ngIf="aircraftState.status === 'error'" class="text-red-600">{{aircraftState.error}}</div>
+          <div *ngIf="aircraftState.status === 'empty'" class="text-slate-500">No aircraft data</div>
+          <ul *ngIf="aircraftState.status === 'success'" class="space-y-2">
+            <li *ngFor="let a of aircraftState.data" class="p-2 rounded border hover:bg-slate-50"
+                [ngClass]="{
+                  'border-green-400': a.operationalStatus==='OPERATIONAL',
+                  'border-yellow-400': a.operationalStatus==='MAINTENANCE',
+                  'border-red-500': a.operationalStatus==='GROUNDED'
+                }">
+              <div class="font-medium">{{a.aircraftId}} — {{a.model}}</div>
+              <div class="text-xs" [ngClass]="{
+                'text-green-700': a.operationalStatus==='OPERATIONAL',
+                'text-yellow-700': a.operationalStatus==='MAINTENANCE',
+                'text-red-700': a.operationalStatus==='GROUNDED'
+              }">{{a.operationalStatus}}</div>
+              <div class="text-xs text-slate-500">Last check: {{a.lastMaintenanceCheck | date:'short'}}</div>
+            </li>
+          </ul>
+        </ng-container>
+      </div>
+    </section>
+  </main>
+
+  <!-- Global error banner (non-blocking) -->
+  <footer *ngIf="lastError() as err" class="fixed bottom-4 left-1/2 -translate-x-1/2">
+    <div class="px-4 py-2 rounded bg-red-600 text-white shadow">
+      {{err}}
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,35 @@
+<!-- Presentation Header -->
+<div class="bg-gradient-to-r from-[#e60000] via-[#f9a01b] to-[#e60000] text-white py-6 shadow">
+  <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+    <div>
+      <div class="text-2xl font-semibold tracking-wide">Airport Operations — Demo Showcase</div>
+      <div class="text-sm opacity-80">UI alinhada ao branding TAP/TAAG • Atualizações simuladas</div>
+    </div>
+    <div class="flex items-center gap-2">
+      <a *ngIf="!isDemo" [href]="demoUrl" class="px-3 py-2 bg-[#00a550] hover:brightness-110 text-white rounded">Ativar Demo</a>
+      <span *ngIf="isDemo" class="px-3 py-2 bg-[#00a550] text-white rounded">Demo Ativo</span>
+      <!-- CTA links removidos -->
+    </div>
+  </div>
+</div>
+
+<!-- Layout Content -->
+<div class="max-w-6xl mx-auto px-4 py-6 grid gap-6 md:grid-cols-2">
+  <section class="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+    <app-flights-board></app-flights-board>
+  </section>
+  <section class="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+    <app-aircraft-board></app-aircraft-board>
+  </section>
+  <section class="md:col-span-2">
+    <app-alerts-banner></app-alerts-banner>
+  </section>
+</div>
+
+<!-- Footer -->
+<footer class="border-t py-4 text-center text-sm text-gray-500">
+  <div class="max-w-6xl mx-auto px-4">
+    <span>© {{year}} Airport Ops Demo </span>
+    <span class="ml-2" *ngIf="isDemo">• Using static demo data</span>
+  </div>
+</footer>
