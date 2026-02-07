@@ -1,89 +1,107 @@
-# FlyProject
+# ✈️ Airport Operations Dashboard
 
-🚀 **Demo Online**: [Acesse a Demo (Frontend Only)](https://seu-projeto.vercel.app/?demo=true)
+[![Demo Online](https://img.shields.io/badge/Demo-Online-blue?style=for-the-badge&logo=vercel)](https://seu-projeto.vercel.app/?demo=true)
+[![Angular](https://img.shields.io/badge/Angular-17-DD0031?style=for-the-badge&logo=angular)](https://angular.io/)
+[![NestJS](https://img.shields.io/badge/NestJS-Backend-E0234E?style=for-the-badge&logo=nestjs)](https://nestjs.com/)
 
-Demo full-stack com Angular 17 (frontend) e NestJS (backend), focado em arquitetura limpa, testes e confiabilidade no desenvolvimento local.
+Um sistema completo de monitoramento de operações aéreas em tempo real, desenvolvido para demonstrar arquitetura limpa, padrões de projeto modernos e excelência em desenvolvimento Full Stack.
 
-## Screenshots
+## 📸 Visão Geral
 
-| Dashboard de Voos | Detalhes da Aeronave |
-|-------------------|----------------------|
+O projeto simula um ambiente de controle operacional de aeroporto, permitindo o monitoramento de voos, status de aeronaves e alertas críticos. O foco principal é a **robustez arquitetural** e a **experiência de desenvolvimento**.
+
+| Dashboard de Voos | Detalhes da Frota |
+|-------------------|-------------------|
 | ![Dashboard](docs/screenshots/dashboard.png) | ![Detalhes](docs/screenshots/aircraft.png) |
 
-> **Nota**: Substitua as imagens acima adicionando arquivos `dashboard.png` e `aircraft.png` na pasta `docs/screenshots`.
+> **Nota**: O sistema inclui um modo de demonstração (`?demo=true`) que utiliza dados estáticos para visualização imediata sem necessidade de backend local.
 
-## Stack e Destaques
-- Frontend: Angular 17 (standalone), RxJS, Tailwind CSS.
-- Backend: NestJS (Express), modelos tipados e logging estruturado.
-- Proxy dev: `/api/*` do frontend redireciona para `http://localhost:3000`.
-- Testes: unitários e e2e passando (frontend e backend).
+---
 
-## Arquitetura (nível sênior)
-- Domínio tipado: `Flight`, `Aircraft`, `Alert` com enums para status/severidade.
-- Serviço de operações: geração determinística de dados sintéticos e timestamps ISO.
-- Controlador: `OpsController` com logs, atrasos mínimos e variáveis de ambiente para simular falhas (desativadas por padrão).
-- Observabilidade: logs estruturados com `timestamp`, `severity` e `requestId`.
-- Frontend: estados assíncronos testáveis e template raiz com feedback visual simples.
+## 🚀 Destaques Técnicos
 
-## Dados: reais ou fictícios?
-Os dados do backend são sintéticos/fictícios. IDs (`FLT-*`, `AC-*`), aeroportos (ex.: `SFO`, `LAX`) e mensagens de alerta são gerados para demonstração. Não há integração com APIs reais.
+Este projeto foi construído seguindo as melhores práticas de engenharia de software, visando escalabilidade e manutenibilidade.
 
-## Como rodar
-1) Backend (porta 3000):
-```
+### Frontend (Angular 17)
+- **Arquitetura Baseada em Sinais (Signals)**: Utilização dos recursos mais recentes do Angular para reatividade granular.
+- **Design System**: Interface construída com **Tailwind CSS**, garantindo consistência e responsividade.
+- **Gerenciamento de Estado**: Implementação limpa utilizando Services e RxJS para fluxos assíncronos complexos.
+- **Componentização**: Estrutura modular com componentes isolados e reutilizáveis.
+
+### Backend (NestJS)
+- **Arquitetura em Camadas**: Separação clara entre Controllers, Services e Camada de Domínio.
+- **Tipagem Forte**: Uso extensivo de TypeScript para garantir contratos de dados seguros (Interfaces e Enums para Voos, Aeronaves e Alertas).
+- **Simulação Realista**: Engine de geração de dados que simula cenários operacionais dinâmicos.
+- **Logging Estruturado**: Sistema de logs detalhado para rastreabilidade e debug.
+
+---
+
+## 🛠️ Tecnologias
+
+- **Frontend**: Angular 17, TypeScript, RxJS, Tailwind CSS
+- **Backend**: NestJS, Express, Node.js
+- **Testes**: Jest (Unitários e E2E)
+- **DevOps**: Configuração para Vercel (Serverless)
+
+---
+
+## 💻 Como Executar Localmente
+
+### Pré-requisitos
+- Node.js (v18 ou superior)
+- npm
+
+### 1. Backend (API)
+O backend rodará na porta `3000`.
+
+```bash
 cd backend
 npm install
 npm run start:dev
 ```
-2) Frontend (porta 4200):
-```
+
+### 2. Frontend (Aplicação)
+O frontend rodará na porta `4200` e fará proxy automático das requisições para o backend.
+
+```bash
 cd frontend
 npm install
 npm start
 ```
-Acesse `http://localhost:4200`. As chamadas a `/api/*` usam o proxy para o backend.
 
-## Deploy na Vercel
+Acesse: `http://localhost:4200`
 
-### Opção 1: Frontend Only (Recomendado para Demo Rápida)
-O frontend possui um modo de demonstração (`?demo=true`) que usa dados estáticos, eliminando a necessidade do backend para visualização rápida.
+---
 
-1. Importe este repositório na Vercel.
-2. Configure o **Root Directory** como `frontend`.
-3. A Vercel detectará o Angular automaticamente.
-4. Após o deploy, acesse sua URL adicionando `?demo=true` ao final.
-   - Exemplo: `https://seu-projeto.vercel.app/?demo=true`
+## 🧪 Testes
 
-### Opção 2: Full Stack (Frontend + Backend)
-Se desejar o backend rodando na Vercel:
+A qualidade do código é garantida por uma suíte de testes abrangente.
 
-1. **Backend**:
-   - Crie um projeto na Vercel apontando para a pasta `backend`.
-   - O arquivo `vercel.json` incluído cuidará da configuração serverless.
-2. **Frontend**:
-   - Crie outro projeto apontando para a pasta `frontend`.
-   - Para que o frontend se comunique com o backend na Vercel, você precisará ajustar a URL da API nos environments ou configurar um rewrite.
+```bash
+# Testes Unitários (Backend)
+cd backend && npm run test
 
-## Testes
-- Backend (unitários):
-```
-cd backend
-npm run test
-```
-- Backend (e2e):
-```
-cd backend
-npm run test:e2e
-```
-- Frontend (unitários, single-run):
-```
-cd frontend
-npm run test -- --watch=false
+# Testes E2E (Backend)
+cd backend && npm run test:e2e
+
+# Testes Unitários (Frontend)
+cd frontend && npm run test -- --watch=false
 ```
 
-## Notas de ambiente
-- Docker e Nginx foram removidos para simplificar o desenvolvimento local.
-- Falhas/timeout aleatórios do backend estão desativados por padrão via env (`SIMULATE_FAILURES=false`, etc.).
+---
 
-## Pronto para LinkedIn
-Projeto Angular + NestJS com arquitetura limpa, domínio tipado, logs estruturados, proxy de desenvolvimento e suíte de testes passando (unitários + e2e). Dados sintéticos para demonstrar fluxo de operações (voos, aeronaves, alertas). Repositório pronto para desenvolvimento local e demonstração pública.
+## 🌐 Deploy
+
+O projeto está configurado para deploy contínuo na Vercel.
+
+- **Frontend Only**: Pode ser hospedado como SPA estático (usando o modo demo).
+- **Full Stack**: O backend NestJS é adaptado para rodar como Serverless Function.
+
+---
+
+## 👤 Autor
+
+Desenvolvido por **John Braga**.
+*Engenheiro de Software focado em soluções escaláveis e arquitetura limpa.*
+
+[LinkedIn](https://www.linkedin.com/in/johnbraga/) • [GitHub](https://github.com/JohnBraga45)
