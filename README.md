@@ -12,7 +12,8 @@ O projeto simula um ambiente de controle operacional de aeroporto, permitindo o 
 
 | Dashboard de Voos | Detalhes da Frota |
 |-------------------|-------------------|
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Detalhes](docs/screenshots/aircraft.png) |
+| ![Dashboard](docs/screenshots/dashboard.png) | 
+![Detalhes](docs/screenshots/aircraft.png) |
 
 > **Nota**: O sistema inclui um modo de demonstração (`?demo=true`) que utiliza dados estáticos para visualização imediata sem necessidade de backend local.
 
@@ -101,7 +102,7 @@ O projeto está configurado para deploy contínuo na Vercel.
 
 ## 👤 Autor
 
-Desenvolvido por **John Braga**.
+Desenvolvido por **Dionísio Braga**.
 *Engenheiro de Software focado em soluções escaláveis e arquitetura limpa.*
 
-[LinkedIn](https://www.linkedin.com/in/johnbraga/) • [GitHub](https://github.com/JohnBraga45)
+[LinkedIn](https://www.linkedin.com/in/dion%C3%ADsio-braga/) • [GitHub](https://github.com/JohnBraga45)
